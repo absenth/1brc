@@ -1,6 +1,5 @@
 Unique Locations: 413
 
-
 example:
    Maputo;27.5
    Sapporo;-3.9
@@ -14,3 +13,32 @@ example:
    Chicago;11.0
 
 output: <city> = <min><mean><max>
+
+## 100 Days of Code log:
+
+#### Day 1: Golang Adventure Begins!
+
+Today, I started tackling the [1 billion rows challenge](https://1brc.dev) in Golang. Initially, I used `os.ReadFile` to read the input file, but soon realized that it wasn't splitting each line correctly when trying to extract temperature values. This was because the next city's name was being appended to the temperature value due to not properly handling newlines.
+
+To overcome this issue, I switched to using `os.Open` and `bufio.NewScanner` to read the file line by line. This approach allowed me to process each row individually and avoid any unwanted concatenations.
+
+Next, I encountered a challenge when trying to convert the `temp` string into a float. After some consideration, I decided to use `strings.Replace` to simply drop the decimal place. While this means that later on I'll need to divide all values by 10, it significantly reduces the amount of floating-point math in the program overall. I believe this will ultimately be a big win for performance and simplicity.
+
+#### Day 2: 1 Billion Row Challenge - Making Progress
+
+Today, I picked up where I left off yesterday on the [1 billion rows
+challenge](https://1brc.dev). I started out by creating a map to hold the data as the
+program parses the measurements.txt file. The map uses the city name as its key and
+uses a slice to hold the temperature data as values.
+
+I then created a small loop to generate an alphabetical list of cities, which will be
+necessary to meet the requirements of the challenge. While working on this, I noticed
+that the record splitting mechanism I wrote yesterday doesn't actually work. The city
+"St. Louis" shows up in the map as "St." and the city "Washington, DC" shows up as
+"Washington,", so I'll need to revisit how I'm splitting records in the `for
+scanner.Scan` loop.
+
+I manually entered a city name into a `key` variable and an integer value into an
+`avg` for testing purposes. This allowed me to print the Minimum and Maximum
+temperatures for that city, so I think I'm getting close to having a "working"
+solution.

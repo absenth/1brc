@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"sort"
+	//"sort"
 	"strconv"
 	"strings"
 )
@@ -25,14 +25,11 @@ func main() {
 
 	for scanner.Scan() {
 		var city, stemp string
-		splitrecord := strings.Split(scanner.Text(), ";")
-		fmt.Sscanf(splitrecord[0], "%s", &city)
-		fmt.Sscanf(splitrecord[1], "%s", &stemp)
+		splitrecord := strings.SplitN(scanner.Text(), ";", 2)
+		city, stemp = splitrecord[0], splitrecord[1]
 		itemp := strings.Replace(stemp, ".", "", 1)
 		temp, _ := strconv.ParseInt(itemp, 0, 32)
-
-		// BUG: the parser isn't working quite right for the city
-		// ie. `St. Louis` shows up as `St.`
+		fmt.Printf("%s %d \n", city, temp)
 
 		/*
 			next steps:
@@ -41,17 +38,19 @@ func main() {
 		*/
 		datamap[city] = append(datamap[city], temp)
 	}
-
 	// NOTE: This sorts the cities into a slice and alphabatizes them
 	keys := make([]string, 0, len(datamap))
+
 	for key := range datamap {
 		keys = append(keys, key)
 	}
+
 	sort.Strings(keys)
 
 	// NOTE: "keys" are an alphabetically sorted list of cities from the datamap
 
-	//avgtemp := 0
+	// avgtemp := 0
+
 	for index, element := range keys {
 		fmt.Printf("%d %s \n", index, element)
 
@@ -66,5 +65,4 @@ func main() {
 	if err := scanner.Err(); err != nil {
 		log.Fatal(err)
 	}
-
 }

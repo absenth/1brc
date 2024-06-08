@@ -42,20 +42,13 @@ func main() {
 	sort.Strings(keys)
 
 	for _, element := range keys {
-		mintemp := slices.Min(datamap[element]) / 10
-		maxtemp := slices.Max(datamap[element]) / 10
+		mintemp := float32(slices.Min(datamap[element])) / 10
+		maxtemp := float32(slices.Max(datamap[element])) / 10
 		totaltemp := sum(datamap[element])
 		count := len(datamap[element])
-		meantemp := (totaltemp / count) / 10
-		fmt.Printf("%s = %d %d %d \n", element, mintemp, meantemp, maxtemp)
-
-		// TODO: Iterate over the map based on the element, in this loop.
-		// TODO: Create the average temp
-		// TODO: Stop Doing It Wrong
+		meantemp := float32((totaltemp / count)) / 10
+		fmt.Printf("%s=%.1f/%.1f/%.1f, ", element, mintemp, meantemp, maxtemp)
 	}
-
-	// NOTE: This should properly print the output...
-	//fmt.Printf("%s = %d %d %d", key, slices.Min(datamap[key]), avg, slices.Max(datamap[key]))
 
 	if err := scanner.Err(); err != nil {
 		log.Fatal(err)

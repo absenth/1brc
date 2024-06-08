@@ -5,16 +5,17 @@ import (
 	"fmt"
 	"log"
 	"os"
-	//"sort"
+	"slices"
+	"sort"
 	"strconv"
 	"strings"
 )
 
 func main() {
 
-	datamap := make(map[string][]int64)
+	datamap := make(map[string][]int)
 
-	f, err := os.Open("data/sample.txt")
+	f, err := os.Open("data/measurements.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -29,16 +30,9 @@ func main() {
 		city, stemp = splitrecord[0], splitrecord[1]
 		itemp := strings.Replace(stemp, ".", "", 1)
 		temp, _ := strconv.ParseInt(itemp, 0, 32)
-		fmt.Printf("%s %d \n", city, temp)
-
-		/*
-			next steps:
-			 * find min, max, and mean after all lines are read
-			 * divide min/max/mean by 10 to replace my mising deicmal
-		*/
-		datamap[city] = append(datamap[city], temp)
+		datamap[city] = append(datamap[city], int(temp))
 	}
-	// NOTE: This sorts the cities into a slice and alphabatizes them
+
 	keys := make([]string, 0, len(datamap))
 
 	for key := range datamap {
@@ -47,12 +41,13 @@ func main() {
 
 	sort.Strings(keys)
 
-	// NOTE: "keys" are an alphabetically sorted list of cities from the datamap
-
-	// avgtemp := 0
-
-	for index, element := range keys {
-		fmt.Printf("%d %s \n", index, element)
+	for _, element := range keys {
+		mintemp := slices.Min(datamap[element]) / 10
+		maxtemp := slices.Max(datamap[element]) / 10
+		totaltemp := sum(datamap[element])
+		count := len(datamap[element])
+		meantemp := (totaltemp / count) / 10
+		fmt.Printf("%s = %d %d %d \n", element, mintemp, meantemp, maxtemp)
 
 		// TODO: Iterate over the map based on the element, in this loop.
 		// TODO: Create the average temp
@@ -65,4 +60,13 @@ func main() {
 	if err := scanner.Err(); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func sum(arr []int) int {
+
+	var sum int
+	for idx, _ := range arr {
+		sum += arr[idx]
+	}
+	return sum
 }

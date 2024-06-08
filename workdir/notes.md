@@ -16,7 +16,7 @@ output: <city> = <min><mean><max>
 
 | Solution Type | Threading | Time | Tag |
 |---------------|-----------|------|-----|
-| simple unoptimized | single threaded | 134.44 s | 1.0 |
+| simple unoptimized | single threaded | 134.44 s | [1.0](https://github.com/absenth/1brc/releases/tag/1.0) |
 
 ## 100 Days of Code log:
 

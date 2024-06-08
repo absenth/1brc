@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"slices"
 	"sort"
 	"strconv"
 	"strings"
@@ -12,9 +13,9 @@ import (
 
 func main() {
 
-	datamap := make(map[string][]int64)
+	datamap := make(map[string][]int)
 
-	f, err := os.Open("data/sample.txt")
+	f, err := os.Open("data/measurements.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -25,46 +26,40 @@ func main() {
 
 	for scanner.Scan() {
 		var city, stemp string
-		splitrecord := strings.Split(scanner.Text(), ";")
-		fmt.Sscanf(splitrecord[0], "%s", &city)
-		fmt.Sscanf(splitrecord[1], "%s", &stemp)
+		splitrecord := strings.SplitN(scanner.Text(), ";", 2)
+		city, stemp = splitrecord[0], splitrecord[1]
 		itemp := strings.Replace(stemp, ".", "", 1)
 		temp, _ := strconv.ParseInt(itemp, 0, 32)
-
-		// BUG: the parser isn't working quite right for the city
-		// ie. `St. Louis` shows up as `St.`
-
-		/*
-			next steps:
-			 * find min, max, and mean after all lines are read
-			 * divide min/max/mean by 10 to replace my mising deicmal
-		*/
-		datamap[city] = append(datamap[city], temp)
+		datamap[city] = append(datamap[city], int(temp))
 	}
 
-	// NOTE: This sorts the cities into a slice and alphabatizes them
 	keys := make([]string, 0, len(datamap))
+
 	for key := range datamap {
 		keys = append(keys, key)
 	}
+
 	sort.Strings(keys)
 
-	// NOTE: "keys" are an alphabetically sorted list of cities from the datamap
-
-	//avgtemp := 0
-	for index, element := range keys {
-		fmt.Printf("%d %s \n", index, element)
-
-		// TODO: Iterate over the map based on the element, in this loop.
-		// TODO: Create the average temp
-		// TODO: Stop Doing It Wrong
+	for _, element := range keys {
+		mintemp := float32(slices.Min(datamap[element])) / 10
+		maxtemp := float32(slices.Max(datamap[element])) / 10
+		totaltemp := sum(datamap[element])
+		count := len(datamap[element])
+		meantemp := float32((totaltemp / count)) / 10
+		fmt.Printf("%s=%.1f/%.1f/%.1f, ", element, mintemp, meantemp, maxtemp)
 	}
-
-	// NOTE: This should properly print the output...
-	//fmt.Printf("%s = %d %d %d", key, slices.Min(datamap[key]), avg, slices.Max(datamap[key]))
 
 	if err := scanner.Err(); err != nil {
 		log.Fatal(err)
 	}
+}
 
+func sum(arr []int) int {
+
+	var sum int
+	for idx, _ := range arr {
+		sum += arr[idx]
+	}
+	return sum
 }

@@ -14,6 +14,10 @@ example:
 
 output: <city> = <min><mean><max>
 
+| Solution Type | Threading | Time | Tag |
+|---------------|-----------|------|-----|
+| simple unoptimized | single threaded | 134.44 s | 1.0 |
+
 ## 100 Days of Code log:
 
 #### Day 1: Golang Adventure Begins!
@@ -42,3 +46,12 @@ I manually entered a city name into a `key` variable and an integer value into a
 `avg` for testing purposes. This allowed me to print the Minimum and Maximum
 temperatures for that city, so I think I'm getting close to having a "working"
 solution.
+
+#### Day 3: 1 Billion Row Challenge - First Completion
+
+I fixed the parsing problem I found on Day 2 by changing`splitrecord := strings.Split(scanner.Text(), ";")` to `splitrecord := strings.SplitN(scanner.Text(), ";", 2)`.  However, on further reflection, I think the actual issue was the subsequent two lines where I was using `fmt.Sscanf`.  Instead, I set `city` and `stemp` values from `splitrecord[0,1]`.
+
+Next, I tackled was getting the min/mean/max for each city in the datamap.  While my current implementation works, I'm confident it can be optimized to run faster.  This is an area I will focus on as I further optimize my code.
+
+My initial goal was to have my solution process all 1 billion rows of data in under 15 minutes.  I'm thrilled to report that, on my first attempt, I achieved this in an avearge of *2 minutes and 14.4 seconds*!  This will serve as the baseline for future optimizations and improvement.
+

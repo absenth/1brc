@@ -12,7 +12,7 @@ example:
    Brisbane;17.5
    Chicago;11.0
 
-output: <city> = <min><mean><max>
+output: `<city> = <min>/<mean>/<max>`
 
 | Solution Type | Threading | Time | Tag |
 |---------------|-----------|------|-----|
